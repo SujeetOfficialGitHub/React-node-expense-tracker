@@ -3,9 +3,10 @@ import axios from 'axios'
 
 export const signup = createAsyncThunk('auth/signup', async({enteredData}, {rejectWithValue}) => {
     try{
-        const res = await axios(``)
+        const res = await axios.post(`/signup/`, enteredData);
+        return res.data
     }catch(error){
-        return rejectWithValue(error.response.data.errors)
+        return rejectWithValue(error.response.data)
     }
 })
 
@@ -25,11 +26,11 @@ const authSlice = createSlice({
             })
             .addCase(signup.fulfilled, (state, action) => {
                 state.loading = false
-                console.log(action)
+                // console.log(action)
             })
             .addCase(signup.rejected, (state, action) => {
                 state.loading = false
-                console.log(action)
+                // console.log(action)
             })
     }
 })

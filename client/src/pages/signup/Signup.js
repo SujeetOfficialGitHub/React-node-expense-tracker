@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux'
 import { signup } from '../../store/features/authSlice'
 
 const Signup = () => {
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [cPassword, setCPassword] = useState('');
@@ -20,14 +21,32 @@ const Signup = () => {
     const submithandler = async(e) => {
         e.preventDefault()
         if (password === cPassword){
-            const enteredData = {email, password}
-            await dispatch(signup({enteredData}))
-            console.log(email, password)
+            const enteredData = {name, email, password}
+            try{
+                const res = await dispatch(signup({enteredData})).unwrap()
+                if (res && res.message){
+                    setMessage(res.message)
+                }
+                setName('')
+                setEmail('')
+            }catch(error){
+                if (error && error.message){
+                    setError(error.message)
+                }
+            }
             
         }else{
             setError("Password and confirmed password doesn't match")
         }
+        setPassword('')
+        setCPassword('')
     } 
+    if (error || message){
+        setTimeout(() => {
+            setMessage("")
+            setError("")
+        },10000)
+    }
   return (
     <Helmet className={classes.signup} title="Signup">
         <h3 className='heading-h3'>Sign Up</h3>
@@ -35,10 +54,19 @@ const Signup = () => {
         {message && <Message className="message">{message}</Message>}
         {error && <Error className="error">{error}</Error> }
         <Form onSubmit={submithandler}>
+            <Form.Group className="mb-3 font-title" controlId="exampleForm.Name">
+                <Form.Label>Name</Form.Label>
+                <Form.Control 
+                    type="text" 
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Enter your name" 
+                    className='font-title'/>
+            </Form.Group>
             <Form.Group className="mb-3 font-title" controlId="exampleForm.Email">
                 <Form.Label>Email</Form.Label>
                 <Form.Control 
-                    type="email" 
+                    type="text" 
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@example.com" 
