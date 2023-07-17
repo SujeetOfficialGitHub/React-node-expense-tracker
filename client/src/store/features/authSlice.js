@@ -15,19 +15,30 @@ export const login = createAsyncThunk('auth/login', async({enteredData}, {reject
         const res = await axios.post(`/login/`, enteredData);
         return res.data
     }catch(error){
+        // console.log(error)
         return rejectWithValue(error.response.data)
     }
 })
 
 const authInitialState = {
-    email: '',
-    token: '',
+    isLoggedIn: true ? localStorage.getItem('token') : false,
+    name: localStorage.getItem('name') ? localStorage.getItem('name') : '',
+    token: localStorage.getItem('name') ? localStorage.getItem('token') : '',
     loading: false
 }
 
 const authSlice = createSlice({
     name: 'auth',
     initialState: authInitialState,
+    reducers: {
+        logout(state){
+            state.isLoggedIn = false;
+            state.token = '';
+            state.name = '';
+            localStorage.removeItem('token')
+            localStorage.removeItem('name')
+        }
+    },
     extraReducers: (builder) => {
         builder
             // Signup 
@@ -48,7 +59,12 @@ const authSlice = createSlice({
                 state.loading = true
             })
             .addCase(login.fulfilled, (state, action) => {
-                state.loading = false
+                state.loading = false;
+                state.isLoggedIn = true;
+                state.name = action.payload.user;
+                state.token = action.payload.token;
+                localStorage.setItem('token', action.payload.token);
+                localStorage.setItem('name', action.payload.user);
                 // console.log(action)
             })
             .addCase(login.rejected, (state, action) => {
@@ -57,5 +73,5 @@ const authSlice = createSlice({
             })
     }
 })
-
+export const {logout} = authSlice.actions;
 export default authSlice.reducer

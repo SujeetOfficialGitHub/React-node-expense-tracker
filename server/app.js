@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const sequelize = require('./util/database');
 const User = require('./models/user');
+require('dotenv').config();
 
 const app = express()
 const PORT = 8000
@@ -23,6 +24,8 @@ app.use((req, res) => {
 //   .catch((error) => {
 //     console.error('Error creating User table:', error);
 //   });
+
+
 
 app.listen(PORT, () => {
     console.log(`Server run at port ${PORT}`)

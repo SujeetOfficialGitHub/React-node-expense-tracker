@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import { Form, Button } from 'react-bootstrap'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import Helmet from '../../component/common/Helmet'
 import classes from './Signup.module.css'
 import Message from '../../component/common/Message'
@@ -17,6 +17,7 @@ const Signup = () => {
     const [message, setMessage] = useState('')
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const submithandler = async(e) => {
         e.preventDefault()
@@ -29,6 +30,8 @@ const Signup = () => {
                 }
                 setName('')
                 setEmail('')
+                navigate('/login')
+
             }catch(error){
                 if (error && error.message){
                     setError(error.message)
