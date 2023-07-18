@@ -3,7 +3,10 @@
   margin: 0;
   box-sizing: border-box;
 }
-
+:root{
+  --bg-color: rgb(89, 66, 89);
+  --text-color: white;
+}
 html{
   font-size: 62.5%;
   overflow-x: hidden;

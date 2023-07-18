@@ -1,0 +1,17 @@
+.date{
+    border: 2px solid rgb(6, 18, 250);
+    border-radius: 1rem;
+    width: 6rem;
+    padding: .5rem;
+    margin-left: 1rem;
+    background: rgb(137, 122, 137);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.date .day{
+    font-size: bolder;
+    margin: -.5rem;
+}

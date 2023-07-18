@@ -1,0 +1,30 @@
+.expense-list{
+    margin: 1rem auto;
+    max-width: 1200px;
+}
+.not-found{
+    background: var(--bg-color);
+    border-top: 2px solid white;
+    text-align: center;
+    font-size: 1.6rem;
+    color: white;
+    padding: 3rem 0rem;
+}
+.premium-section{
+    background: var(--bg-color);
+    font-size: 1.6rem;
+    color: white;
+    padding: 3rem 0rem;
+
+}
+.expense-down-btn{
+    display: block;
+    margin: auto;
+    font-size: 1.6rem;
+
+}
+@media (max-width:1200px){
+    .expense-list{
+        margin: 1rem 3%;
+    }
+}

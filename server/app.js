@@ -9,9 +9,11 @@ const PORT = 8000
 app.use(express.json())
 app.use(cors());
 
-const userRoutes = require('./routes/user')
+const userRoutes = require('./routes/user');
+const expenseRoutes = require('./routes/expense');
 
 app.use(userRoutes);
+app.use(expenseRoutes);
 
 app.use((req, res) => {
     res.status(404).json({error: "Page Not Found"})
