@@ -41,7 +41,9 @@ const Home = () => {
 			} catch (error) {
 				if (error && error.message) {
 					setError(error.message);
-				}
+				}else{
+          setError("Failed to add expense")
+        }
 			}
 		}
     };

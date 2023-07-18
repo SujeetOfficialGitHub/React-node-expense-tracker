@@ -4,7 +4,12 @@ import axios from 'axios'
 // Add Expenses 
 export const addExpense = createAsyncThunk('expense/addExpense', async({data},{rejectWithValue}) => {
     try{
-        const res = await axios.post(`/add-expense`, data);
+        const res = await axios.post(`/add-expense`, data, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${localStorage.getItem('token')}`
+            }
+        });
         return res.data;
     }catch(error){
         // console.log(error);
@@ -15,7 +20,12 @@ export const addExpense = createAsyncThunk('expense/addExpense', async({data},{r
 // Get all expenses 
 export const getExpenses = createAsyncThunk('expense/getExpenses', async(_,{rejectWithValue}) => {
     try{
-        const res = await axios.get(`/get-expenses`);
+        const res = await axios.get(`/get-expenses`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${localStorage.getItem('token')}`
+            }
+        });
         return res.data;
     }catch(error){
         return rejectWithValue(error.response.data)
@@ -26,7 +36,12 @@ export const getExpenses = createAsyncThunk('expense/getExpenses', async(_,{reje
 // Delete expense 
 export const deleteExpense = createAsyncThunk('expense/deleteExpense', async({id},{rejectWithValue}) => {
     try{
-        const res = await axios.delete(`/delete-expense/${id}`);
+        const res = await axios.delete(`/delete-expense/${id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${localStorage.getItem('token')}`
+            }
+        });
         return res.data;
     }catch(error){
         console.log(error)
@@ -37,7 +52,12 @@ export const deleteExpense = createAsyncThunk('expense/deleteExpense', async({id
 // Update expense 
 export const updateExpense = createAsyncThunk('expense/updateExpense', async({expenseId, data},{rejectWithValue}) => {
     try{
-        const res = await axios.put(`/update-expense/${expenseId}`, data);
+        const res = await axios.put(`/update-expense/${expenseId}`, data, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${localStorage.getItem('token')}`
+            }
+        });
         return res.data;
     }catch(error){
         return rejectWithValue(error.response.data)

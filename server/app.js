@@ -1,8 +1,9 @@
 const express = require('express')
 const cors = require('cors')
 const sequelize = require('./util/database');
-const User = require('./models/user');
-require('dotenv').config();
+
+const dotenv = require('dotenv')
+dotenv.config();
 
 const app = express()
 const PORT = 8000

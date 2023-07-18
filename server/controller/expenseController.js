@@ -8,7 +8,7 @@ exports.addExpense = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    const expense = await Expense.create({ amount, category, description });
+    const expense = await Expense.create({ amount, category, description, userId: user.userId });
 
     if (expense) {
       return res.status(201).json({ message: "Expense added successfully", expense });
@@ -22,8 +22,9 @@ exports.addExpense = async (req, res) => {
 };
 
 exports.getExpenses = async (req, res) => {
+  // console.log(req.user.userId)
   try {
-    const expenses = await Expense.findAll({ order: [['createdAt', 'DESC']] });
+    const expenses = await Expense.findAll({where: {userId: user.userId}, order: [['createdAt', 'DESC']] });
 
     if (expenses.length === 0) {
       return res.status(404).json({ message: "No expenses found" });
@@ -39,14 +40,14 @@ exports.getExpenses = async (req, res) => {
 exports.updateExpense = async (req, res) => {
   try {
     const { expenseId } = req.params;
-    console.log(expenseId)
+    // console.log(expenseId)
     const { amount, category, description } = req.body;
 
     if (!amount || !category || !description) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    const expense = await Expense.findOne({ where: { id: expenseId } });
+    const expense = await Expense.findOne({ where: { id: expenseId, userId: user.userId } });
 
     if (!expense) {
       return res.status(404).json({ message: "Expense not found" });
@@ -69,7 +70,8 @@ exports.deleteExpense = async (req, res) => {
   try {
     const { expenseId } = req.params;
 
-    const expense = await Expense.findOne({ where: { id: expenseId } });
+    const expense = await Expense.findOne({ where: { id: expenseId, userId: user.userId } });
+
 
     if (!expense) {
       return res.status(404).json({ message: "Expense not found" });

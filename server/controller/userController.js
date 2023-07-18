@@ -43,20 +43,31 @@ exports.signup = async(req, res) => {
 exports.login = async (req, res) => {
     try{
         const {email, password} = req.body;
-
+        
         const user = await User.findOne({where: {email}});
-
+        
         if (!user){
             return res.status(401).json({message: "Invalid email or password"});
         }
-        const passwordmatch = await bcrypt.compare(password, user.password)
+        const passwordmatch = await bcrypt.compare(password.toString(), user.password)
+
     
         if (!passwordmatch){
             return res.status(401).json({message: "Invalid email or password"});
         }
-        const token = jwt.sign({userId: user.id}, process.env.SECRET_KEY)
+        
+        const tokenPayload = { userId: user.id};
+        // console.log(tokenPayload)
+        const secretKey = process.env.SECRET_KEY;
+        // console.log(secretKey)
 
-        res.status(200).json({message: 'Login successful', token, user: user.name})
+        const token = jwt.sign(tokenPayload, secretKey, {expiresIn: "1h"})
+        // const token =jwt.sign({userId: user.id},  '36 chambers');
+        // console.log(token)
+
+        res.status(200).json({message: 'Login successful', token: 
+        token})
+        
 
     }catch(error){
         console.log("Error in user login", error)
