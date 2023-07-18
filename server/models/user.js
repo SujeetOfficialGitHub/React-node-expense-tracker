@@ -17,6 +17,10 @@ const User = sequilize.define('user', {
     password: {
         type: DataTypes.STRING,
         allowNUll: false
+    },
+    isPremium: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
 })
 

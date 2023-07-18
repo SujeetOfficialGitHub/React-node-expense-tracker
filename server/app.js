@@ -12,9 +12,11 @@ app.use(cors());
 
 const userRoutes = require('./routes/user');
 const expenseRoutes = require('./routes/expense');
+const paymentRoutes = require('./routes/payment');
 
 app.use(userRoutes);
 app.use(expenseRoutes);
+app.use(paymentRoutes);
 
 app.use((req, res) => {
     res.status(404).json({error: "Page Not Found"})

@@ -3,7 +3,7 @@ import React from 'react'
 const ExpenseView = ({expense}) => {
   return (
     <div>
-        <dl>
+        <dl className='font-title'>
             <dt>Category</dt>
             <dd>{expense.category}</dd>
 

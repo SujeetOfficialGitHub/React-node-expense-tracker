@@ -76,7 +76,11 @@ const expenseSlice = createSlice({
     reducers: {
         expenseView(state, action){
             state.expense = state.expenses.find(expense => expense.id === action.payload.id)
-        }
+        },
+        resetExpensesState(state){
+            state.expenses = []
+            state.expense = {}
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -143,5 +147,5 @@ const expenseSlice = createSlice({
             })
     }
 })
-export const {expenseView} = expenseSlice.actions;
+export const {expenseView, resetExpensesState} = expenseSlice.actions;
 export default expenseSlice.reducer

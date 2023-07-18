@@ -56,12 +56,12 @@ exports.login = async (req, res) => {
             return res.status(401).json({message: "Invalid email or password"});
         }
         
-        const tokenPayload = { userId: user.id};
+        const tokenPayload = { userId: user.id, name: user.name, isPremium: user.isPremium};
         // console.log(tokenPayload)
         const secretKey = process.env.SECRET_KEY;
         // console.log(secretKey)
 
-        const token = jwt.sign(tokenPayload, secretKey, {expiresIn: "1h"})
+        const token = jwt.sign(tokenPayload, secretKey, {expiresIn: "5h"})
         // const token =jwt.sign({userId: user.id},  '36 chambers');
         // console.log(token)
 
