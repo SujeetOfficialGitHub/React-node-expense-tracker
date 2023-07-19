@@ -1,5 +1,7 @@
-.filter-form{
+.filter-container{
     display: flex;
+    position: relative;
+    flex-wrap: wrap;
     background: var(--bg-color);
     margin-top: 1rem;
 }
@@ -9,6 +11,14 @@
 .filter-form select{
     width: 10rem;
 
+}
+.username{
+    position: absolute;
+    right: 1.5rem; top: 1rem; bottom: 0;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    color: white;
 }
 @media (max-width: 400px){
     .filter-form select{

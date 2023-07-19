@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import Helmet from '../../component/common/Helmet'
 import CustomModal from '../../component/common/CustomModal'
 import ExpenseView from '../../component/common/ExpenseView'
-import { openModal } from '../../store/features/modalSlice'
+import { closeModal, openModal } from '../../store/features/modalSlice'
 
 const Home = () => {
     const [message, setMessage] = useState('');
@@ -24,6 +24,7 @@ const Home = () => {
 				const result = await dispatch(updateExpense({ expenseId, data })).unwrap();
 				if (result && result.message) {
 					setMessage(result.message);
+          dispatch(closeModal())
 				}
 			} catch (error) {
 				if (error && error.message) {

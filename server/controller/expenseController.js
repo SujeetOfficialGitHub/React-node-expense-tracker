@@ -1,8 +1,12 @@
 const Expense = require('../models/expense');
+const User = require('../models/user')
 
 exports.addExpense = async (req, res) => {
   try {
-    const { amount, category, description } = req.body;
+    const { _, category, description } = req.body;
+    const amount = parseInt(req.body.amount)
+    const _user = await User.findOne({where: {id: user.userId}})
+
 
     if (!amount || !category || !description) {
       return res.status(400).json({ message: "Missing required fields" });
@@ -10,7 +14,9 @@ exports.addExpense = async (req, res) => {
 
     const expense = await Expense.create({ amount, category, description, userId: user.userId });
 
-    if (expense) {
+    if (expense && _user) {
+      _user.totalAmount += amount;
+      _user.save();
       return res.status(201).json({ message: "Expense added successfully", expense });
     } else {
       return res.status(500).json({ message: "Failed to add expense" });
@@ -41,7 +47,9 @@ exports.updateExpense = async (req, res) => {
   try {
     const { expenseId } = req.params;
     // console.log(expenseId)
-    const { amount, category, description } = req.body;
+    const { _, category, description } = req.body;
+    const amount = parseInt(req.body.amount);
+    const _user = await User.findOne({where: {id: user.userId}})
 
     if (!amount || !category || !description) {
       return res.status(400).json({ message: "Missing required fields" });
@@ -49,13 +57,17 @@ exports.updateExpense = async (req, res) => {
 
     const expense = await Expense.findOne({ where: { id: expenseId, userId: user.userId } });
 
-    if (!expense) {
+    if (!expense && !_user) {
       return res.status(404).json({ message: "Expense not found" });
     }
+
+    _user.totalAmount = _user.totalAmount + amount - expense.amount;
+    await _user.save()
 
     expense.amount = amount;
     expense.category = category;
     expense.description = description;
+
 
     await expense.save();
 
@@ -69,13 +81,15 @@ exports.updateExpense = async (req, res) => {
 exports.deleteExpense = async (req, res) => {
   try {
     const { expenseId } = req.params;
-
+    const _user = await User.findOne({where: {id: user.userId}})
     const expense = await Expense.findOne({ where: { id: expenseId, userId: user.userId } });
 
 
-    if (!expense) {
+    if (!expense && _user) {
       return res.status(404).json({ message: "Expense not found" });
     }
+    _user.totalAmount -= expense.amount;
+    await _user.save()
     const deletedExpense = { ...expense.toJSON() };
     await expense.destroy();
 

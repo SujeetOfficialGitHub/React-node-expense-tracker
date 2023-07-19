@@ -1,9 +1,17 @@
 import React, {useState} from 'react'
 import classes from './FilterExpenses.module.css'
+import { decodeToken } from 'react-jwt';
+import { useSelector } from 'react-redux';
+import {FaRegUserCircle} from 'react-icons/fa'
 
 const FilterExpenses = (props) => {
   const [year, setYear] = useState(0)
   const [month, setMonth] = useState('')
+
+  const token = useSelector(state => state.auth.token)
+  const decodedToken = decodeToken(token)
+  const name = decodedToken && decodedToken.name
+
 
   const handleYearChange = (e) => {
     setYear(e.target.value)
@@ -15,7 +23,7 @@ const FilterExpenses = (props) => {
     props.onMonthChange(e.target.value)
   }
   return (
-    <div className={classes['filter-form']}>
+    <div className={classes['filter-container']}>
         <div className={classes['input-box']}>
             <label htmlFor="yearFilter" className='fs-4 text-light'>Sort by year</label><br />
             <select className='fs-4' value={year} onChange={handleYearChange} aria-label="Default select example">
@@ -48,6 +56,10 @@ const FilterExpenses = (props) => {
             </select>
         </div>
         }
+        <h3 className={classes.username}>
+          <span><FaRegUserCircle/></span>
+          <span>{name}</span>
+        </h3>
     </div>
   )
 }

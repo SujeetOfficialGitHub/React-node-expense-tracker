@@ -1,7 +1,10 @@
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { paymentSuccess, createOrder } from '../../store/features/paymentSlice';
+import { updateToken } from '../../store/features/authSlice';
 
 const PaymentForm = () => {
     const totalAmount = 100;
+    const dispatch = useDispatch()
 
     const loadRazorpayScript = async () => {
         const script = document.createElement('script');
@@ -12,43 +15,14 @@ const PaymentForm = () => {
     };
 
     window.onload = loadRazorpayScript();
-
-    // When payment is success then send request to server 
-    const payment_success = async(response) => {
-        try{
-            // console.log('response', response)
-            // Fetch the order ID from the server
-            const res = await axios.post('/payment_success', {
-                ...response, amount: totalAmount
-            } , {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${localStorage.getItem('token')}`
-            }
-            });
-            console.log(res)
-        }catch(error){
-            console.log(error)
-        }
-    }
-
+   
     function initializeRazorpay() {
         const handlePayment = async () => {
             try {
                 // Fetch the order ID from the server
-                const response = await axios.post('/create-order', {
-                        amount: totalAmount
-                    }, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `${localStorage.getItem('token')}`
-                    }
-                });
-                const { orderId, amount  } = response.data;
+                const result = await dispatch(createOrder({totalAmount})).unwrap()
+                const {amount, orderId} = result;
 
-
-                // Set the order ID
-                // setOrderId(orderId);
 
                 // Initialize the Razorpay payment
                 const razorpayOptions = {
@@ -59,10 +33,14 @@ const PaymentForm = () => {
                 description: 'Premium Subscription',
                 //   image: 'https://example.com/logo.png', // URL of your logo
                 order_id: orderId,
-                handler: function (response) {
+                handler: async function (response) {
                     // Handle the payment success response here
                     // console.log('Payment success:', response);
-                    payment_success(response)
+                    const data = {...response, amount: totalAmount}
+                    const result = await dispatch(paymentSuccess({data})).unwrap()
+                    if (result){
+                        dispatch(updateToken({token: result.token}))
+                    }
                 },
                 prefill: {
                     email: 'john@example.com',
@@ -76,7 +54,7 @@ const PaymentForm = () => {
                 const razorpay = new window.Razorpay(razorpayOptions);
                 razorpay.open();
             } catch (error) {
-                // console.error('Error creating order:', error);
+                console.error('Error creating order:', error);
             }
             };
 

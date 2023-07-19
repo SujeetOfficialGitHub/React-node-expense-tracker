@@ -1,12 +1,11 @@
 const express = require('express')
 const router = express.Router();
 
-const paymentController = require('../controller/paymentController');
+const premiumController = require('../controller/premiumController');
 const {authenticateToken} = require('../middleware/authMiddleware')
 
 router.use(authenticateToken);
-router.post('/create-order', paymentController.createOrder)
-router.post('/payment-success', paymentController.paymentSuccess)
+router.get('/leaderboard', premiumController.leaderboard)
 
 
 

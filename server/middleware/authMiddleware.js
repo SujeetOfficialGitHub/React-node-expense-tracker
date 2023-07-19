@@ -11,7 +11,7 @@ exports.authenticateToken = (req, res, next) => {
         console.log(err)
         return res.status(403).json({ error: 'Invalid token' });
     }else{
-        user = { userId: decoded.userId };
+        user = decoded
         // console.log(req.user)
         next();
     }

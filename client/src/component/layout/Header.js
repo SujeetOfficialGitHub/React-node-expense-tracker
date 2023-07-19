@@ -32,6 +32,7 @@ function Header() {
             <Nav>
                 {!isLoggedIn && <NavLink className="nav-link font-link" to="/login">Login</NavLink>}
                 {!isLoggedIn && <NavLink className="nav-link font-link" to="/signup">Signup</NavLink>}
+                {isLoggedIn && isPremium && <NavLink className="nav-link font-link" to="/leaderboard">Leaderboard</NavLink>}
                 {isLoggedIn && !isPremium && <PaymentForm />} <span className='m-1'></span>
                 {isLoggedIn && <Button onClick={logoutHandler} className='font-link'>Logout</Button>}
             </Nav>

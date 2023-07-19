@@ -21,6 +21,10 @@ const User = sequilize.define('user', {
     isPremium: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
+    },
+    totalAmount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
     }
 })
 
