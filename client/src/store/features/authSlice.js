@@ -20,6 +20,26 @@ export const login = createAsyncThunk('auth/login', async({enteredData}, {reject
     }
 })
 
+export const forgotPassword = createAsyncThunk('auth/forgotPassword', async({email}, {rejectWithValue}) => {
+    try{
+        const res = await axios.post(`/password/forgot-password/`, {email});
+        return res.data
+    }catch(error){
+        console.log(error)
+        return rejectWithValue(error.response.data)
+    }
+})
+
+export const createNewPassword = createAsyncThunk('auth/createNewPassword', async({password1, password2}, {rejectWithValue}) => {
+    try{
+        const res = await axios.post(`/password/create-new-password/`, {password1, password2});
+        return res.data
+    }catch(error){
+        console.log(error)
+        return rejectWithValue(error.response.data)
+    }
+})
+
 const authInitialState = {
     isLoggedIn: true ? localStorage.getItem('token') : false,
     token: localStorage.getItem('token') ? localStorage.getItem('token') : '',
@@ -65,6 +85,32 @@ const authSlice = createSlice({
                 localStorage.setItem('token', action.payload.token);
             })
             .addCase(login.rejected, (state, action) => {
+                state.loading = false
+                // console.log(action)
+            })
+            
+            // Forgot Password
+            .addCase(forgotPassword.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(forgotPassword.fulfilled, (state, action) => {
+                state.loading = false;
+                console.log(action)
+            })
+            .addCase(forgotPassword.rejected, (state, action) => {
+                state.loading = false
+                // console.log(action)
+            })
+
+            // Create New Password 
+            .addCase(createNewPassword.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(createNewPassword.fulfilled, (state, action) => {
+                state.loading = false;
+                console.log(action)
+            })
+            .addCase(createNewPassword.rejected, (state, action) => {
                 state.loading = false
                 // console.log(action)
             })

@@ -143,7 +143,7 @@ const expenseSlice = createSlice({
             })
             .addCase(updateExpense.rejected, (state, action) => {
                 state.loading = false;
-                console.log(action)
+                // console.log(action)
             })
     }
 })

@@ -13,23 +13,23 @@ exports.createOrder =  async (req, res) => {
     try {
         const {amount} = req.body;
         const options = {
-            amount: amount * 100, // Amount in paise (example: 50000 paise = ₹500)
+            amount: amount * 100,
             currency: 'INR',
             receipt: 'order_receipt_' + Date.now(),
             payment_capture: 1,
         };
   
-      // Create a Razorpay order
-      const order = await razorpay.orders.create(options);
-    //   console.log(order)
+        // Create a Razorpay order
+        const order = await razorpay.orders.create(options);
+        //   console.log(order)
   
-      // Send the order ID to the client
-      res.status(200).json({ orderId: order.id, amount: order.amount });
+        // Send the order ID to the client
+        res.status(200).json({ orderId: order.id, amount: order.amount });
     } catch (error) {
-      console.error('Error creating Razorpay order:', error);
-      res.status(500).json({ error: 'Failed to create order' });
+        console.error('Error creating Razorpay order:', error);
+        res.status(500).json({ error: 'Failed to create order' });
     }
-  };
+};
 
 exports.paymentSuccess = async(req, res) => {
     try{
@@ -60,7 +60,7 @@ exports.paymentSuccess = async(req, res) => {
 
             res.status(200).json({ message: "Payment successful", payment, token });
         }else{
-          res.status(500).json({ error: 'Payment failed' });
+            res.status(500).json({ error: 'Payment failed' });
         }
         
     } catch (error) {

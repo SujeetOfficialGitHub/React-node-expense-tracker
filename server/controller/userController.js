@@ -1,6 +1,7 @@
 const User = require('../models/user')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const Sib = require('sib-api-v3-sdk');
 
 exports.signup = async(req, res) => {
     try{
@@ -62,8 +63,6 @@ exports.login = async (req, res) => {
         // console.log(secretKey)
 
         const token = jwt.sign(tokenPayload, secretKey, {expiresIn: "5h"})
-        // const token =jwt.sign({userId: user.id},  '36 chambers');
-        // console.log(token)
 
         res.status(200).json({message: 'Login successful', token: 
         token})
@@ -73,4 +72,48 @@ exports.login = async (req, res) => {
         console.log("Error in user login", error)
         res.status(500).json({message: 'Login failed'})
     }
+}
+
+exports.forgotPassword = async (req, res) => {
+    try {
+        const email = req.body.email;
+
+        const client = Sib.ApiClient.instance;
+
+        const apiKey = client.authentications['api-key'];
+        apiKey.apiKey = process.env.BREVO_API_KEY;
+
+        const tranEmailApi = new Sib.TransactionalEmailsApi();
+
+        const sender = {
+            email: 'sujeetgroups@gmail.com'
+        };
+
+        const receiver = [
+            {
+            email: email
+            }
+        ];
+
+        const sendEmailResult = await tranEmailApi.sendTransacEmail({
+            sender,
+            to: receiver,
+            subject: 'Reset Your Password',
+            htmlContent: `
+            <h3>Click the link below to reset your password</h3>
+            <a href="http://localhost:3000/password/create-new-password">Click here</a>
+            `,
+        });
+
+        console.log(sendEmailResult);
+        res.status(200).json({ message: 'Forgot password email sent', sendEmailResult });
+    } catch (error) {
+        console.error('Error sending forgot password email:', error);
+        res.status(500).json({ message: 'Failed to send forgot password email' });
+    }
+};
+  
+exports.createNewPassword = async(req, res) => {
+    console.log(req.body)
+    res.status(200).json({message: 'succes'})
 }
