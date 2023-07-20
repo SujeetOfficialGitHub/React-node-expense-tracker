@@ -54,3 +54,18 @@ code {
   text-align: center;
   font-size: 1.4rem;
 }
+.pagination-container{
+  display: flex;
+  margin-top: 2rem !important;
+}
+
+.pagination{
+  margin: auto;
+}
+.page-item a{
+  border: 1px solid black;
+}
+.page-link{
+  padding: 0rem 1rem;
+  font-size: 2rem;
+}

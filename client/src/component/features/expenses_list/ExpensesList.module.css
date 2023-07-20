@@ -10,19 +10,15 @@
     color: white;
     padding: 3rem 0rem;
 }
-.premium-section{
-    background: var(--bg-color);
-    font-size: 1.6rem;
-    color: white;
-    padding: 3rem 0rem;
 
+/* .expensePagination li{
+    display: flex;
+    font-size: 2rem;
+    margin: 2rem auto;
 }
-.expense-down-btn{
-    display: block;
-    margin: auto;
-    font-size: 1.6rem;
-
-}
+.expensePagination a{
+    font-size: 2.5rem;
+} */
 @media (max-width:1200px){
     .expense-list{
         margin: 1rem 3%;
