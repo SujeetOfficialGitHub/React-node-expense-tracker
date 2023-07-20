@@ -8,6 +8,8 @@ import { decodeToken } from 'react-jwt';
 import Leaderboard from '../pages/leaderboard/Leaderboard'
 import ForgotPassword from '../pages/forgot_password/ForgotPassword'
 import CreateNewPassword from '../pages/create_new_password/CreateNewPassword'
+import ReportView from '../pages/report_view/ReportView'
+
 
 
 const Router = () => {
@@ -18,6 +20,7 @@ const Router = () => {
         <Routes>
             <Route path='/' element={isLoggedIn ? <Home/> : <Navigate to="/login" />} />
             <Route path='/leaderboard' element={isLoggedIn && isPremium ? <Leaderboard/> : <Navigate to="/login" />} />
+            <Route path='/report-view' element={isLoggedIn && isPremium ? <ReportView /> : <Navigate to="/login" />} />
             <Route path='/signup' element={!isLoggedIn ? <Signup/> : <Navigate to="/" />} />
             <Route path='/login' element={!isLoggedIn ? <Login/> : <Navigate to="/" />} />
             <Route path='/password/forgot-password' element={!isLoggedIn ? <ForgotPassword/> : <Navigate to="/" />} />

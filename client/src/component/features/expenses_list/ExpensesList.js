@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Spinner } from 'react-bootstrap';
-// import { CSVLink } from 'react-csv';
+import { Spinner} from 'react-bootstrap';
 
 import classes from './ExpensesList.module.css';
 import Expense from '../expense/Expense';
@@ -12,7 +11,10 @@ import { getExpenses } from '../../../store/features/expenseSlice';
 const ExpensesList = (props) => {
     const [selectedYear, setSelectedYear] = useState('');
     const [selectedMonth, setSelectedMonth] = useState('');
-    const [error, setError] = useState('')
+    const [selectedDay, setSelectedDay] = useState('');
+    const [error, setError] = useState('');
+
+  
     
     const dispatch = useDispatch();
     
@@ -40,21 +42,28 @@ const ExpensesList = (props) => {
         let filteredExpenses = expenses;
 
         if (selectedYear && selectedYear !== 'all') {
-            filteredExpenses = filteredExpenses.filter(expense => {
-                const itemYear = new Date(expense.createdAt).getFullYear();
-                return itemYear.toString() === selectedYear;
-            });
+          filteredExpenses = filteredExpenses.filter((expense) => {
+            const itemYear = new Date(expense.createdAt).getFullYear();
+            return itemYear.toString() === selectedYear;
+          });
         }
-
+    
         if (selectedMonth && selectedMonth !== 'all') {
-            filteredExpenses = filteredExpenses.filter(expense => {
-                const itemMonth = (new Date(expense.createdAt).getMonth() + 1).toString().padStart(2, '0');
-                return itemMonth === selectedMonth;
-            });
+          filteredExpenses = filteredExpenses.filter((expense) => {
+            const itemMonth = (new Date(expense.createdAt).getMonth() + 1).toString().padStart(2, '0');
+            return itemMonth === selectedMonth;
+          });
         }
-
+    
+        if (selectedDay && selectedDay !== 'all') {
+          filteredExpenses = filteredExpenses.filter((expense) => {
+            const itemDay = new Date(expense.createdAt).getDate().toString().padStart(2, '0');
+            return itemDay === selectedDay;
+          });
+        }
+    
         setFilteredData(filteredExpenses);
-    }, [expenses, selectedYear, selectedMonth]);
+      }, [expenses, selectedYear, selectedMonth, selectedDay]);
 
     const handleYearChange = (selectedYear) => {
         setSelectedYear(selectedYear);
@@ -66,10 +75,18 @@ const ExpensesList = (props) => {
         // console.log(selectedMonth)
     };
 
+    const handleDayChange = (selectedDay) => {
+        setSelectedDay(selectedDay);
+      };
+
     // const totalExpensesAmount = expenses.reduce((initialVal, currVal) => initialVal + parseInt(currVal.amount), 0 )
     return (
         <div className={classes['expense-list']}>
-            <FilterExpenses onYearChange={handleYearChange} onMonthChange={handleMonthChange} />
+            <FilterExpenses 
+                onYearChange={handleYearChange} 
+                onMonthChange={handleMonthChange} 
+                onDayChange={handleDayChange}
+            />
             {error && filteredData.length === 0 ? (
                     <p className={classes['not-found']}>No expenses found.</p>
             ) : (
