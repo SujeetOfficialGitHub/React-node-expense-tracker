@@ -1,7 +1,9 @@
 const User = require('../models/user')
+const ForgotPasswordRequest = require('../models/forgotPasswordRequests')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Sib = require('sib-api-v3-sdk');
+const { v4: uuidv4 } = require('uuid');
 
 exports.signup = async(req, res) => {
     try{
@@ -78,12 +80,27 @@ exports.forgotPassword = async (req, res) => {
     try {
         const email = req.body.email;
 
+        // Check if the user with the provided email exists
+        const user = await User.findOne({ where: { email } });
+
+        if (!user) {
+        return res.status(404).json({ message: 'User not found.' });
+        }
+
+        // Create a new forgot password request with a UUID
+        const forgotPasswordRequestId = uuidv4();
+        await ForgotPasswordRequest.create({
+            id: forgotPasswordRequestId,
+            userId: user.id,
+        });
+
         const client = Sib.ApiClient.instance;
 
         const apiKey = client.authentications['api-key'];
         apiKey.apiKey = process.env.BREVO_API_KEY;
 
         const tranEmailApi = new Sib.TransactionalEmailsApi();
+        
 
         const sender = {
             email: 'sujeetgroups@gmail.com'
@@ -94,15 +111,18 @@ exports.forgotPassword = async (req, res) => {
             email: email
             }
         ];
-
+        const resetUrl = `http://localhost:3000/password/create-new-password/${forgotPasswordRequestId}`
         const sendEmailResult = await tranEmailApi.sendTransacEmail({
             sender,
             to: receiver,
             subject: 'Reset Your Password',
             htmlContent: `
             <h3>Click the link below to reset your password</h3>
-            <a href="http://localhost:3000/password/create-new-password">Click here</a>
+            <a href="{{params.url}}">Click here</a>
             `,
+            params: {
+                url: resetUrl
+            }
         });
 
         console.log(sendEmailResult);
@@ -114,6 +134,30 @@ exports.forgotPassword = async (req, res) => {
 };
   
 exports.createNewPassword = async(req, res) => {
-    console.log(req.body)
-    res.status(200).json({message: 'succes'})
+    const { id } = req.params;
+    const { password1 } = req.body;
+
+    
+    // Check if the forgot password request with the provided ID exists and is active
+    const forgotPasswordRequest = await ForgotPasswordRequest.findOne({
+        where: { id, isactive: true },
+        include: [{ model: User }],
+    });
+
+
+    if (!forgotPasswordRequest || !forgotPasswordRequest.user) {
+        return res.status(404).json({ message: 'Invalid Request' });
+    }
+        
+    // Encrypt the new password
+    const hashedPassword = await bcrypt.hash(password1.toString(), 10);
+
+    // Update the user's password in the database
+    await User.update({ password: hashedPassword }, { where: { id: forgotPasswordRequest.user.id } });
+
+    // Deactivate the forgot password request
+    await ForgotPasswordRequest.update({ isactive: false }, { where: { id } });
+
+    res.json({ message: 'Password updated successfully.' });
 }
+    

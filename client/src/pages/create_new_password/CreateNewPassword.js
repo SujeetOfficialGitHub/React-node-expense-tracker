@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import { Form, Button } from 'react-bootstrap'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import Helmet from '../../component/common/Helmet'
 import classes from './CreateNewPassword.module.css'
 import Message from '../../component/common/Message'
@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux'
 import { createNewPassword} from '../../store/features/authSlice'
 
 const CreateNewPassword = () => {
+    const {id} = useParams();
     const [password1, setPassword1] = useState('');
     const [password2, setPassword2] = useState('');
     const [error, setError] = useState('')
@@ -19,18 +20,24 @@ const CreateNewPassword = () => {
 
     const submithandler = async(e) => {
         e.preventDefault()
-        try{
-            const res = await dispatch(createNewPassword({password1, password2})).unwrap()
-            if (res && res.message){
-                setMessage(res.message);
-                setPassword1('')
-                setPassword2('')
-                navigate('/');
-            }
-        }catch(error){
-            
-            if (error && error.message){
-                setError(error.message);
+        if (password1 !== password2){
+            setError("Password and confirm password not match")
+        }else if(password1.trim().length < 5){
+            setError("Password must be 5 character long")
+        }else{
+            try{
+                const res = await dispatch(createNewPassword({id, password1})).unwrap()
+                if (res && res.message){
+                    setMessage(res.message);
+                    setPassword1('')
+                    setPassword2('')
+                    navigate('/');
+                }
+            }catch(error){
+                
+                if (error && error.message){
+                    setError(error.message);
+                }
             }
         }
     } 

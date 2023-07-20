@@ -21,7 +21,7 @@ const Router = () => {
             <Route path='/signup' element={!isLoggedIn ? <Signup/> : <Navigate to="/" />} />
             <Route path='/login' element={!isLoggedIn ? <Login/> : <Navigate to="/" />} />
             <Route path='/password/forgot-password' element={!isLoggedIn ? <ForgotPassword/> : <Navigate to="/" />} />
-            <Route path='/password/create-new-password' element={!isLoggedIn ? <CreateNewPassword/> : <Navigate to="/" />} />
+            <Route path='/password/create-new-password/:id' element={!isLoggedIn ? <CreateNewPassword/> : <Navigate to="/" />} />
         </Routes>
     )
 }

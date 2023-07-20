@@ -30,9 +30,9 @@ export const forgotPassword = createAsyncThunk('auth/forgotPassword', async({ema
     }
 })
 
-export const createNewPassword = createAsyncThunk('auth/createNewPassword', async({password1, password2}, {rejectWithValue}) => {
+export const createNewPassword = createAsyncThunk('auth/createNewPassword', async({id, password1}, {rejectWithValue}) => {
     try{
-        const res = await axios.post(`/password/create-new-password/`, {password1, password2});
+        const res = await axios.post(`/password/create-new-password/${id}`, {password1});
         return res.data
     }catch(error){
         console.log(error)
